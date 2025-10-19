@@ -1,4 +1,8 @@
 {
+  "name": "hairday",
+  "description": "Aplicação Web para agendamento para corte de cabelo",
+  "author": "Ricardo Werner",
+  "version": "1.0.0",
   "scripts": {
     "server": "json-server --watch server.json --port 3333"
   },
