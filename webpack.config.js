@@ -27,10 +27,10 @@ module.exports = {
   }),
   ],
 
-  modele: {
+  module: {
     rules: [
       {
-        teste: /\.css$/,
+        test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
     ],
