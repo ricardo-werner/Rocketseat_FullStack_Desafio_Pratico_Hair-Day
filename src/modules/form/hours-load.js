@@ -1,5 +1,6 @@
 import { openingHours } from "../../utils/opening-hours.js";
 import dayjs from "dayjs";
+import { hoursClick } from './hours-click.js';
 
 const hours = document.getElementById("hours");
 
@@ -19,26 +20,30 @@ export function hoursLoad({ date }) {
   })
 
 
-// Renderizar os horários.
-opening.forEach(({ hour, available }) => { 
-  const li = document.createElement("li");
-  
-  li.classList.add("hour");
-  li.classList.add(available ? "hour-available" : "hour-unavailable");
+  // Renderizar os horários.
+  opening.forEach(({ hour, available }) => { 
+    const li = document.createElement("li");
+    
+    li.classList.add("hour");
+    li.classList.add(available ? "hour-available" : "hour-unavailable");
 
-  li.textContent = hour;
+    li.textContent = hour;
 
-  if (hour === "9:00") {
-    hourHeaderAdd("Manhã");
-  } else if (hour === "13:00") {
-    hourHeaderAdd("Tarde");
-  } else if (hour === "18:00") { 
-    hourHeaderAdd("Noite");
-  }
+    if (hour === "9:00") {
+      hourHeaderAdd("Manhã");
+    } else if (hour === "13:00") {
+      hourHeaderAdd("Tarde");
+    } else if (hour === "18:00") { 
+      hourHeaderAdd("Noite");
+    }
 
-  hours.append(li);
+    hours.append(li);
 
-})};
+  })
+
+  // Adiciona evento de click nos horários disponíveis.
+  hoursClick()
+};
 
 function hourHeaderAdd (title) {
   const header = document.createElement("li");
