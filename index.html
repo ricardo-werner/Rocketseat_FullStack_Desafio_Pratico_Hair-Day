@@ -17,62 +17,80 @@
   </head>
   <body>
     <div class="container">
-      <img src="./src/assets/logo.svg" alt="Logo" class="logo" />
+      <img src="./src/assets/logo.svg" alt="Hair Day" class="logo" />
 
-      <form class="form">
-        <header>
-          <h1>Agende um atendimento</h1>
-          <p>
-            Selecione data, horário e informe o nome do cliente para criar o
-            agendamento
-          </p>
-        </header>
+      <main>
+        <form class="form">
+          <header>
+            <h2>Agende um atendimento</h2>
+            <p>
+              Selecione data, horário e informe o nome do cliente para criar o
+              agendamento
+            </p>
+          </header>
 
-        <label for="date" class="label">Data</label>
-        <div class="input">
-          <i><img src="./src/assets/calendar.svg" alt="Calendário" /></i>
-          <input type="date" id="date" name="date" required />
-        </div>
+          <label for="date" class="label">Data</label>
+          <div class="input">
+            <i><img src="./src/assets/calendar.svg" alt="" /></i>
+            <input type="date" id="date" name="date" required />
+          </div>
 
-        <span class="label">Horários</span>
-        <ul id="hours" class="hours" aria-label="Horários disponíveis de manhã">
-          <!-- Exemplo: Manhã 
-          <li data-period="morning" class="hour-period">Manhã</li>
-          <li data-period="morning" value="09:00" class="hour hour-available">
-            09:00
-          </li>-->
 
-          <!-- Exemplo: Tarde  
-          <li data-period="afternoon" class="hour-period">Tarde</li>
-          <li data-period="afternoon" value="13:00" class="hour hour-unavailable">
-            13:00
-          </li>-->
 
-          <!-- Exemplo: Noite 
-          <li data-period="night" class="hour-period">Noite</li>
-          <li data-period="night" value="19:00" class="hour hour-available">
-            19:00
-          </li>-->
-        </ul>
+          <fieldset class="hours-fieldset">
+            <legend class="label" id="hours-legend">Horários</legend>
 
-        <label for="client" class="label">Cliente</label>
-        <div class="input">
-          <i><img src="./src/assets/person.svg" alt="Calendário" /></i>
-          <input
-            type="text"
-            id="client"
-            name="client"
-            placeholder="Nome do cliente"
-            required
-          />
-        </div>
+            <p id="hours-description" class="sr-only">
+              Use as setas para navegar e a barra de espaço para selecionar.
+            </p>
+            
+            <div 
+              id="hours" 
+              class="hours" 
+              role="radiogroup"
+              aria-labelledby="hours-legend"
+            >
+              <!-- Exemplo: Manhã 
+              <li data-period="morning" class="hour-period">Manhã</li>
+              <li data-period="morning" value="09:00" class="hour hour-available">
+                09:00
+              </li>-->
 
-        <button type="submit" class="button">Agendar</button>
-      </form>
+              <!-- Exemplo: Tarde  
+              <li data-period="afternoon" class="hour-period">Tarde</li>
+              <li data-period="afternoon" value="13:00" class="hour hour-unavailable">
+                13:00
+              </li>-->
 
+              <!-- Exemplo: Noite 
+              <li data-period="night" class="hour-period">Noite</li>
+              <li data-period="night" value="19:00" class="hour hour-available">
+                19:00
+              </li>-->
+            </div>
+
+          </fieldset>
+          
+
+          <label for="client" class="label">Cliente</label>
+          <div class="input">
+            <i><img src="./src/assets/person.svg" alt="" /></i>
+            <input
+              type="text"
+              id="client"
+              name="client"
+              placeholder="Nome do cliente"
+              required
+            />
+          </div>
+
+          <button type="submit" class="button">Agendar</button>
+        </form>
+      </main>
+      
       <aside class="schedule">
         <header>
-          <h1>Agendamentos</h1>
+          <h2>Agendamentos</h2>
           <p>Visualize os agendamentos de acordo com o dia selecionado</p>
         </header>
 
