@@ -1,14 +1,10 @@
 import dayjs from "dayjs";
-
 import { scheduleNew } from "../../services/schedule-new.js";
-// import { schedulesDay } from "../schedules/load.js"; // NÃO PRECISAMOS MAIS DISSO
 
-// --- NOVA ADIÇÃO ---
-// Precisamos ter acesso às listas para adicionar o novo item
+// Seleciona os elementos (como antes)
 const periodMorning = document.getElementById("period-morning");
 const periodAfternoon = document.getElementById("period-afternoon");
 const periodNight = document.getElementById("period-night");
-// --- FIM DA NOVA ADIÇÃO ---
 
 const form = document.querySelector("form");
 const clientName = document.getElementById("client");
@@ -18,10 +14,15 @@ const inputToday = dayjs(new Date()).format("YYYY-MM-DD");
 selectedDate.value = inputToday;
 selectedDate.min = inputToday;
 
-form.onsubmit = async (event) => {
-  event.preventDefault();
+
+// --- INÍCIO DA CORREÇÃO (Alerta Duplo) ---
+
+// 1. Criamos a função de 'submit' separadamente
+const handleFormSubmit = async (event) => {
+  event.preventDefault(); // Previne o envio (como antes)
 
   try {
+    // Toda a sua lógica de validação e submit (exatamente como estava)
     const name = clientName.value.trim();
     if (!name) {
       return alert("Informe o nome do cliente");
@@ -37,28 +38,25 @@ form.onsubmit = async (event) => {
     const when = dayjs(selectedDate.value).add(hour, "hour");
     const id = String(new Date().getTime());
 
-    // 1. Faz o agendamento (o POST para a API)
+    // 1. Faz o agendamento
     await scheduleNew({
       id,
       name,
-      when: when.toISOString(), // Garante que 'when' é uma string
+      when: when.toISOString(),
     });
 
-    // 2. Mostra o alerta de sucesso (como antes)
+    // 2. Mostra o alerta de sucesso (APENAS UMA VEZ)
     alert("Agendamento realizado com sucesso!!");
 
-    // --- INÍCIO DA LÓGICA DE "UI OTIMISTA" ---
-    // 3. Em vez de recarregar, criamos o <li> manualmente
-
+    // 3. Lógica de "UI Otimista" (exatamente como estava)
     const item = document.createElement("li");
     const time = document.createElement("strong");
-    const nameSpan = document.createElement("span"); // Renomeado de 'name' para 'nameSpan'
+    const nameSpan = document.createElement("span");
 
     item.setAttribute("data-id", id);
     time.textContent = dayjs(when).format("HH:mm");
     nameSpan.textContent = name;
 
-    // Cria o botão de cancelar (lógica que fizemos para o schedulesShow)
     const cancelButton = document.createElement("button");
     cancelButton.classList.add("cancel-button");
     cancelButton.setAttribute(
@@ -72,12 +70,9 @@ form.onsubmit = async (event) => {
     cancelIcon.setAttribute("alt", "");
     cancelButton.appendChild(cancelIcon);
 
-    // Adiciona tudo ao item <li>
     item.append(time, nameSpan, cancelButton);
 
-    // Adiciona o <li> na lista correta (Manhã, Tarde ou Noite)
-    const hourNumber = dayjs(when).hour(); // Pega a hora (número)
-
+    const hourNumber = dayjs(when).hour();
     if (hourNumber <= 12) {
       periodMorning.appendChild(item);
     } else if (hourNumber > 12 && hourNumber <= 18) {
@@ -85,9 +80,8 @@ form.onsubmit = async (event) => {
     } else {
       periodNight.appendChild(item);
     }
-    // --- FIM DA LÓGICA ---
 
-    // 4. Limpa o input do cliente (como antes)
+    // 4. Limpa o input
     clientName.value = "";
 
   } catch (error) {
@@ -95,3 +89,14 @@ form.onsubmit = async (event) => {
     console.log(error);
   }
 }
+
+// 2. A "Guarda" (Flag)
+// Só adiciona o 'listener' se ele ainda não foi adicionado
+if (!form.dataset.submitListenerAttached) {
+  form.addEventListener("submit", handleFormSubmit);
+
+  // 3. Marcamos o formulário para que o 'listener' não seja adicionado de novo
+  form.dataset.submitListenerAttached = "true";
+}
+
+// --- FIM DA CORREÇÃO ---
