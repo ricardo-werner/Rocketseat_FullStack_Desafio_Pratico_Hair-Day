@@ -18,44 +18,48 @@ selectedDate.min = inputToday;
 const handleFormSubmit = async (event) => {
   event.preventDefault();
 
-  // --- INÍCIO DA CORREÇÃO (Global Lock) ---
-  // 1. Verifica o "lock" global no próprio formulário.
+  // 1. Verifica o "lock" global. Se estiver "true", sai imediatamente.
   if (form.dataset.submitting === "true") {
     console.warn("Submit já em progresso. Ignorando chamada duplicada.");
-    return; // Sai imediatamente se já estiver enviando
+    return;
   }
 
-  // 2. Ativa o "lock" global
+  // 2. Ativa o "lock".
   form.dataset.submitting = "true";
-  // --- FIM DA CORREÇÃO ---
 
   try {
+    // --- INÍCIO DA VALIDAÇÃO ---
+    // (Movemos a liberação do lock para DENTRO da validação)
+
     const name = clientName.value.trim();
     if (!name) {
-      return alert("Informe o nome do cliente");
+      alert("Informe o nome do cliente");
+      form.dataset.submitting = "false"; // Libera o lock
+      return;
     }
 
     const selectedRadio = document.querySelector("input[name='hour']:checked");
     if (!selectedRadio) {
-      return alert("Selecione o horário!!");
+      alert("Selecione o horário!!");
+      form.dataset.submitting = "false"; // Libera o lock
+      return;
     }
+
+    // --- FIM DA VALIDAÇÃO ---
 
     const hourValue = selectedRadio.value;
     const [hour] = hourValue.split(":");
     const when = dayjs(selectedDate.value).add(hour, "hour");
     const id = String(new Date().getTime());
 
-    // 1. Faz o agendamento
     await scheduleNew({
       id,
       name,
       when: when.toISOString(),
     });
 
-    // 2. Mostra o alerta de sucesso (APENAS UMA VEZ)
     alert("Agendamento realizado com sucesso!!");
 
-    // 3. Lógica de "UI Otimista" (exatamente como estava)
     const item = document.createElement("li");
     const time = document.createElement("strong");
     const nameSpan = document.createElement("span");
@@ -79,26 +83,28 @@ const handleFormSubmit = async (event) => {
 
     item.append(time, nameSpan, cancelButton);
 
+    // --- CORREÇÃO DA LÓGICA DO `hourNumber` ---
     const hourNumber = dayjs(when).hour();
-    if (hourNumber <= 12) {
+    if (hourNumber < 12) { // Manhã (até 11:59)
       periodMorning.appendChild(item);
-    } else if (hourNumber > 12 && hourNumber <= 18) {
+    } else if (hourNumber >= 12 && hourNumber < 18) { // Tarde (12:00 - 17:59)
       periodAfternoon.appendChild(item);
-    } else {
+    } else { // Noite (18:00 em diante)
       periodNight.appendChild(item);
     }
+    // --- FIM DA CORREÇÃO ---
 
-    // 4. Limpa o formulário (Nome E Horário)
+    // Limpa o formulário
     clientName.value = "";
-    selectedRadio.checked = false; // <-- CORREÇÃO (Limpa o horário selecionado)
+    selectedRadio.checked = false;
 
   } catch (error) {
     alert("Não foi possível realizar o agendamento");
     console.log(error);
   } finally {
-    // 5. Desativa o "lock" global
-    // Usamos um timeout para garantir que o processo termine
-    // e para evitar cliques duplos acidentais
+    // 3. Desativa o "lock" global (agora o 'finally' funciona)
+    // Os 'returns' da validação já liberam o lock.
+    // Este 'finally' libera o lock em caso de SUCESSO ou ERRO.
     setTimeout(() => {
       form.dataset.submitting = "false";
     }, 300);
@@ -106,9 +112,4 @@ const handleFormSubmit = async (event) => {
 }
 
 // Anexamos o listener (A lógica de 'guarda' anterior foi removida)
-// A nova "guarda" está DENTRO da própria função handleFormSubmit
 form.addEventListener("submit", handleFormSubmit);
-
-// Importante: Verifique seu 'main.js' ou 'page-load.js'
-// e garanta que você está importando o 'submit.js' UMA ÚNICA VEZ.
-// Ex: import "./modules/form/submit.js"; (DEVE APARECER SÓ UMA VEZ)
