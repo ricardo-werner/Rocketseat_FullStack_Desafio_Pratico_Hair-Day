@@ -23,39 +23,48 @@ form.onsubmit = async (event) => {
   try {
     // Recuperando o nome do cliente.
     const name = clientName.value.trim();
-    
-    if (!name) { 
+
+    if (!name) {
       return alert("Informe o nome do cliente");
     }
 
-    // Recupera o horário selecionado.
-    const hourSelected = document.querySelector(".hour-selected");
+    // --- INÍCIO DA MUDANÇA (Seletor Mais Robusto) ---
 
-    if (!hourSelected) { 
-      return alert("Selecione o horário!!")
+    // 1. Recupera o *input* que está selecionado, procurando pelo ATRIBUTO 'name'.
+    const selectedRadio = document.querySelector("input[name='hour']:checked");
+
+    // 2. Verifica se algum rádio foi selecionado.
+    if (!selectedRadio) {
+      return alert("Selecione o horário!!") // Este é o alerta que você viu
     }
 
-    //Recupera somente a hora.
-    const [hour] = hourSelected.innerText.split(":");
+    // 3. Pega o valor (ex: "21:00") de dentro do rádio.
+    const hourValue = selectedRadio.value
+
+    // 4. Recupera somente a hora (ex: "21")
+    const [hour] = hourValue.split(":");
+
+    // --- FIM DA MUDANÇA ---
+
 
     //Insere a hora na data.
     const when = dayjs(selectedDate.value).add(hour, "hour");
 
-    // Gera o ID
-    const id = new Date().getTime();
+    // Gera o ID como STRING
+    const id = String(new Date().getTime());
 
     // Faz o agendamento.
     await scheduleNew({
       id,
       name,
       when,
-  })
+    })
 
     // Recarrega os agendamentos e limpa o input do cliente.
     await schedulesDay();
     clientName.value = "";
 
-  } catch(error) {
+  } catch (error) {
     alert("Não foi possível realizar o agendamento");
     console.log(error);
   }
