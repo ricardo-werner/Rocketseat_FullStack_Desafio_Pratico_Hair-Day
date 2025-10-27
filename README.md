@@ -1,20 +1,18 @@
-# Projeto_DIA - Desenvolvimento Inclusivo e Acessível
-Uma landing page educacional e interativa construída com as melhores práticas de HTML semântico, CSS moderno e Javascript, com um foco profundo em acessibilidade (A11Y), segurança (CSP) e responsividade.
+# Projeto Hair Day - Agendamento
+
 
 
 ## 🔗 Deploy
 
 ### 🔗 Acesse a página publicada aqui:  
 
-👉 https://ricardo-werner.github.io/Projeto_DIA/
+👉 
 
 ---
 
 ### 📜 Sobre o Projeto
 
-O Projeto D.I.A. (Desenvolvimento Inclusivo e Acessível) nasceu como um desafio técnico e evoluiu para um guia prático e funcional sobre como construir uma web verdadeiramente para todos. O Objetivo é demonstrar, na prática, a aplicação de diretrizes de acessibilidade, segurança e design responsivo, transformando conceitos complexos em uma experiência de usuário tangível e inclusiva.
 
-Esta página serve como um recurso educacional e eum exemplo vivo de que é possível criar interfaces visualmente atraentes, seguras e que funcionam par pessoas com diferentes habilidades
 
 #### 🧩 Mapa da Estrutura do DOM do HTML:
 
@@ -23,7 +21,7 @@ Esta página serve como um recurso educacional e eum exemplo vivo de que é poss
 Abaixo está o fluxograma representando a estrutura do DOM utilizada neste projeto. A organização hierárquica foi pensada para garantir uma navegação lógica e clara para tecnologias assistivas, como leitores de tela.
 
 <p align="center">
-  <img width="480" src="./src/assets/to_readme/estruturaDom.png" alt="Estrutura do DOM do Projeto D.I.A. " />
+  <img width="480" src="./src/assets/to_readme/estruturaDom.png" alt="Estrutura do DOM do Projeto" />
 </p>
 ---
 
@@ -165,7 +163,7 @@ Abaixo está o fluxograma representando a estrutura do DOM utilizada neste proje
 1. **Clone o repositório:**
 
 ```bash
-git clone https://github.com/ricardo-werner/Projeto_DIA.git
+git clone 
 ```
 
 2. Abra o projeto no VS Code
@@ -191,9 +189,7 @@ git clone https://github.com/ricardo-werner/Projeto_DIA.git
 ---
 
 💡 Reflexões
-Desenvolver este projeto foi uma jornada de aprendizado profunda, especialmente na depuração de problemas complexos do mundo real, como a configuração de uma Política de Segurança de Conteúdo (CSP) para integrar ferramentas de terceiros. Cada erro encontrado e resolvido reforçou a importância de uma abordagem metódica e da utilização das ferramentas de desenvolvedor do navegador.
 
-O resultado é um projeto que não só serve como portfólio, mas também como um testemunho do meu compromisso com a criação de uma web verdadeiramente inclusive e acessível.
 
 ---
 
