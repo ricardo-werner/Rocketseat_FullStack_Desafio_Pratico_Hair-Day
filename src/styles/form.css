@@ -27,6 +27,17 @@
   font-size: 0.87rem;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .label {
   font-size: 1rem;
   color: #b2afb6;
@@ -140,6 +151,7 @@
 .hour-text {
   position: relative;
   z-index: 1;
+  pointer-events: none;
 }
 
 
