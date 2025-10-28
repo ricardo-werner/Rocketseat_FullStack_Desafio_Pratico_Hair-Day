@@ -92,7 +92,7 @@
 
 ::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  background: url("../assets/arrow-down.svg") no-repeat;
+  background: url("../assets/icons/arrow-down.svg") no-repeat;
 }
 
 /* Remove a borda padrão do fieldset */
