@@ -14,23 +14,18 @@ const inputToday = dayjs(new Date()).format("YYYY-MM-DD");
 selectedDate.value = inputToday;
 selectedDate.min = inputToday;
 
-
+// 1. Define a *função* de submit (sem anexá-la ao window)
 const handleFormSubmit = async (event) => {
   event.preventDefault();
 
-  // 1. Verifica o "lock" global. Se estiver "true", sai imediatamente.
+  // O "Lock" (para cliques duplos rápidos)
   if (form.dataset.submitting === "true") {
-    console.warn("Submit já em progresso. Ignorando chamada duplicada.");
     return;
   }
-
-  // 2. Ativa o "lock".
   form.dataset.submitting = "true";
 
   try {
-    // --- INÍCIO DA VALIDAÇÃO ---
-    // (Movemos a liberação do lock para DENTRO da validação)
-
+    // --- Lógica de Validação ---
     const name = clientName.value.trim();
     if (!name) {
       alert("Informe o nome do cliente");
@@ -44,8 +39,7 @@ const handleFormSubmit = async (event) => {
       form.dataset.submitting = "false"; // Libera o lock
       return;
     }
-
-    // --- FIM DA VALIDAÇÃO ---
+    // --- Fim da Validação ---
 
     const hourValue = selectedRadio.value;
     const [hour] = hourValue.split(":");
@@ -58,38 +52,36 @@ const handleFormSubmit = async (event) => {
       when: when.toISOString(),
     });
 
-    alert("Agendamento realizado com sucesso!!");
+    alert("Agendamento realizado com sucesso!!"); // <-- SÓ VAI APARECER 1X
 
+    // --- Lógica de UI Otimista ---
     const item = document.createElement("li");
     const time = document.createElement("strong");
     const nameSpan = document.createElement("span");
-
     item.setAttribute("data-id", id);
     time.textContent = dayjs(when).format("HH:mm");
     nameSpan.textContent = name;
-
     const cancelButton = document.createElement("button");
     cancelButton.classList.add("cancel-button");
     cancelButton.setAttribute(
       "aria-label",
       `Cancelar agendamento de ${name} às ${time.textContent}`
     );
-
     const cancelIcon = document.createElement("img");
     cancelIcon.classList.add("cancel-icon");
     cancelIcon.setAttribute("src", "./src/assets/cancel.svg");
     cancelIcon.setAttribute("alt", "");
     cancelButton.appendChild(cancelIcon);
-
     item.append(time, nameSpan, cancelButton);
 
     // --- CORREÇÃO DA LÓGICA DO `hourNumber` ---
     const hourNumber = dayjs(when).hour();
-    if (hourNumber < 12) { // Manhã (até 11:59)
+    if (hourNumber < 12) { // Manhã
       periodMorning.appendChild(item);
-    } else if (hourNumber >= 12 && hourNumber < 18) { // Tarde (12:00 - 17:59)
+    } else if (hourNumber >= 12 && hourNumber < 18) { // Tarde
       periodAfternoon.appendChild(item);
-    } else { // Noite (18:00 em diante)
+      S
+    } else { // Noite
       periodNight.appendChild(item);
     }
     // --- FIM DA CORREÇÃO ---
@@ -102,14 +94,28 @@ const handleFormSubmit = async (event) => {
     alert("Não foi possível realizar o agendamento");
     console.log(error);
   } finally {
-    // 3. Desativa o "lock" global (agora o 'finally' funciona)
-    // Os 'returns' da validação já liberam o lock.
-    // Este 'finally' libera o lock em caso de SUCESSO ou ERRO.
+    // Libera o lock
     setTimeout(() => {
       form.dataset.submitting = "false";
     }, 300);
   }
 }
 
-// Anexamos o listener (A lógica de 'guarda' anterior foi removida)
+// --- INÍCIO DA CORREÇÃO DEFINITIVA (Controle de Referência do HMR) ---
+
+// 2. Verifica se JÁ EXISTE uma função de submit antiga no 'window'
+if (window.currentSubmitHandler) {
+  // Se sim, remove o LISTENER ANTIGO (usando a referência salva)
+  console.log("HMR detectado: Removendo listener de submit antigo...");
+  form.removeEventListener("submit", window.currentSubmitHandler);
+}
+
+// 3. Anexa o NOVO listener
+console.log("Anexando novo listener de submit...");
 form.addEventListener("submit", handleFormSubmit);
+
+// 4. GUARDA a referência da função que ACABAMOS de anexar
+//    para que possamos removê-la na PRÓXIMA recarga do HMR.
+window.currentSubmitHandler = handleFormSubmit;
+
+// --- FIM DA CORREÇÃO ---
